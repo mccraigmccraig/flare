@@ -1,8 +1,11 @@
 package flare.query
 {
+	import __AS3__.vec.Vector;
+	
 	import flare.util.Filter;
 	import flare.util.Property;
 	import flare.util.Sort;
+	import flare.util.Vectors;
 	
 	/**
 	 * Performs query processing over a collection of ActionScript objects.
@@ -258,10 +261,12 @@ package flare.query
 			if (_aggrs == null) _aggrs = aggregates();
 			
 			// TODO -- evaluate any sub-queries in WHERE clause
-			var results:Array = [];
+			var results:Vector.<Object> = new Vector.<Object>();
 			var visitor:Function;
 			if (input is Array) {
 				visitor = (input as Array).forEach;
+			} else if (input is Vector.<Object>) {
+				visitor = (input as Vector.<Object>).forEach;
 			} else if (input is Function) {
 				visitor = input as Function;
 			} else if (Object(input).hasOwnProperty("visit") &&
@@ -288,13 +293,13 @@ package flare.query
 			}
 			
 			if (_select == null) {
-				return results;
+				return Vectors.copyToArray(results);
 			} else if (_update && _aggrs==null && _groupby==null) {
-				return applyAll(results);
+				return applyAll(Vectors.copyToArray(results));
 			} else if (_aggrs==null && _groupby==null) {
-				return projectAll(results);
+				return projectAll(Vectors.copyToArray(results));
 			} else {
-				return aggregate(results);
+				return aggregate(Vectors.copyToArray(results));
 			}
 		}
 		

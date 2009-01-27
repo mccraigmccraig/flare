@@ -1,10 +1,11 @@
 package flare.vis.operator.layout
-{
-	import flare.vis.data.NodeSprite;
+{	
 	import flare.animate.Transitioner;
-	import flash.geom.Point;
-	import flare.util.Arrays;
+	import flare.util.Vectors;
 	import flare.vis.data.EdgeSprite;
+	import flare.vis.data.NodeSprite;
+	
+	import flash.geom.Point;
 	
 	/**
 	 * Layout that places tree nodes in an indented outline layout.
@@ -13,7 +14,7 @@ package flare.vis.operator.layout
 	{		
 		private var _bspace:Number = 5;  // the spacing between sibling nodes
     	private var _dspace:Number = 50; // the spacing between depth levels
-    	private var _depths:Array = new Array(20); // TODO make sure array regrows as needed
+    	private var _depths:Vector.<Number> = new Vector.<Number>(20); // TODO make sure vector regrows as needed
     	private var _maxDepth:int = 0;
     	private var _ax:Number, _ay:Number; // for holding anchor co-ordinates
 		
@@ -42,7 +43,7 @@ package flare.vis.operator.layout
 		/** @inheritDoc */
 		protected override function layout():void
 		{
-        	Arrays.fill(_depths, 0);
+			Vectors.fill(_depths,0);
         	_maxDepth = 0;
         
         	var a:Point = layoutAnchor;
@@ -76,7 +77,8 @@ package flare.vis.operator.layout
     			o = _t.$(e); 
     			o.alpha = visible ? 1.0 : 0.0;
     			if (e.points == null) {
-					e.points = [(p.x+node.x)/2, (p.y+node.y)/2];
+					e.points = new Vector.<Object>();
+					e.points.push((p.x+node.x)/2); e.points.push((p.y+node.y)/2);
     			}
     			o.points = [_t.getValue(p,"x"), y];
     		}

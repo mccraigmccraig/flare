@@ -31,8 +31,8 @@ package flare.vis.controls
 		
 		private var _add0:DisplayObject = null;
 		private var _rem0:DisplayObject = null;
-		private var _add:Array = null;
-		private var _rem:Array = null;
+		private var _add:Vector.</*DisplayObject*/Object> = null;
+		private var _rem:Vector.</*DisplayObject*/Object> = null;
 		
 		/** The active hit area over which selection
 		 *  interactions can be performed. */
@@ -237,7 +237,8 @@ package flare.vis.controls
 				if (_add0 == null) {
 					_add0 = d;
 				} else {
-					_add = [_add0, d];
+					_add.length = 0;
+					_add.push(_add0); _add.push(d);
 				}
 			else
 				_add.push(d);
@@ -249,7 +250,8 @@ package flare.vis.controls
 				if (_rem0 == null) {
 					_rem0 = d;
 				} else {
-					_rem = [_rem0, d];
+					_rem.length=0;
+					_rem.push(_rem0); _rem.push(d);
 				}
 			else
 				_rem.push(d);

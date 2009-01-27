@@ -1,11 +1,14 @@
 package flare.vis.data
 {
+	import __AS3__.vec.Vector;
+	
 	import flare.data.DataField;
 	import flare.data.DataSchema;
 	import flare.data.DataSet;
 	import flare.util.Arrays;
 	import flare.util.Property;
 	import flare.util.Sort;
+	import flare.util.Vectors;
 	import flare.vis.events.DataEvent;
 	
 	import flash.events.EventDispatcher;
@@ -93,12 +96,27 @@ package flare.vis.data
 		
 		/**
 		 * Creates a new Data instance from an array of tuples. The object in
-		 * the array will become the data objects for NodeSprites.
-		 * @param a an Array of data objects
+		 * the vector will become the data objects for NodeSprites.
+		 * @param a an array of data objects
 		 * @return a new Data instance, with NodeSprites populated with the
 		 *  input data.
 		 */
 		public static function fromArray(a:Array):Data {
+			var d:Data = new Data();
+			for each (var tuple:Object in a) {
+				d.addNode(tuple);
+			}
+			return d;
+		}
+
+		/**
+		 * Creates a new Data instance from an object vector of tuples. The object in
+		 * the vector will become the data objects for NodeSprites.
+		 * @param a an Object Vector of data objects
+		 * @return a new Data instance, with NodeSprites populated with the
+		 *  input data.
+		 */
+		public static function fromVector(a:Vector.<Object>):Data {
 			var d:Data = new Data();
 			for each (var tuple:Object in a) {
 				d.addNode(tuple);
@@ -286,13 +304,21 @@ package flare.vis.data
 		public function createEdges(sortBy:*=null, groupBy:*=null,
 			ignoreExistingEdges:Boolean=false):void
 		{
-			// create arrays and sort criteria
-			var a:Array = Arrays.copy(_nodes.list);
-			var g:Array = groupBy ? 
-				(groupBy is Array ? groupBy as Array : [groupBy]) : [];
+			// create vectors and sort criteria
+			var a:Vector.<Object> = Vectors.copy(_nodes.list);
+			var g:Vector.<Object> = new Vector.<Object>();
+			// Workaround code as a result of initialization bug in the Vector class
+			if(groupBy)
+			{
+				if(groupBy is Vector.<Object>) g = groupBy as Vector.<Object>;
+				else {
+					g = new Vector.<Object>();
+					g.push(groupBy);	
+				}
+			}
 			var len:int = g.length;
-			if (sortBy is Array) {
-				var s:Array = sortBy as Array;
+			if (sortBy is Vector.<Object>) {
+				var s:Vector.<Object> = sortBy as Vector.<Object>;
 				for (var i:uint=0; i<s.length; ++i)
 					g.push(s[i]);
 			} else {
@@ -303,19 +329,19 @@ package flare.vis.data
 			a.sort(Sort.$(g));
 			
 			// get property instances for value operations
-			var p:Array = new Array();
+			var p:Vector.<Object> = new Vector.<Object>();
 			for (i=0; i<len; ++i) {
 				if (g[i] is String)
-					p.push(Property.$(g[i]));
+					p.push(Property.$(g[i] as String));
 			}
-			var f:Property = p[p.length-1];
+			var f:Property = p[p.length-1] as Property;
 			
 			// connect all items who match on the last group by field
 			for (i=1; i<a.length; ++i) {
 				if (!f || f.getValue(a[i-1]) == f.getValue(a[i])) {
 					if (!ignoreExistingEdges && a[i].isConnected(a[i-1]))
 						continue;
-					var e:EdgeSprite = addEdgeFor(a[i-1], a[i], directedEdges);
+					var e:EdgeSprite = addEdgeFor(a[i-1] as NodeSprite, a[i] as NodeSprite, directedEdges);
 					// add data values from nodes
 					for (var j:uint=0; j<p.length; ++j) {
 						p[j].setValue(e, p[j].getValue(a[i]));

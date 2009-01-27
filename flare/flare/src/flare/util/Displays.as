@@ -109,13 +109,15 @@ package flare.util
 			d:DisplayObjectContainer, cmp:Function):void
 		{
 			if (d==null) return;
-			var a:Array = new Array(d.numChildren);
+			var a:Vector.<Object> = new Vector.<Object>(d.numChildren);
 			for (var i:int=0; i<a.length; ++i) {
 				a[i] = d.getChildAt(i);
 			}
-			if (cmp==null) a.sort() else a.sort(cmp);
+			// Vector objects require a comparison function, so arbitrarily choosing
+			// Array.NUMERIC
+			if (cmp==null) a.sort(Array.NUMERIC) else a.sort(cmp);
 			for (i=0; i<a.length; ++i) {
-				d.setChildIndex(a[i], i);
+				d.setChildIndex(a[i] as DisplayObject, i);
 			}
 		}
 		

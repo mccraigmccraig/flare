@@ -1,5 +1,7 @@
 package flare.query
 {
+	import flare.util.Vectors;
+	
 	import flash.utils.ByteArray;
 	
 	/**
@@ -7,7 +9,7 @@ package flare.query
 	 */
 	public class CompositeExpression extends Expression
 	{
-		/** Array of sub-expressions. */
+		/** Vector of sub-expressions. */
 		protected var _children:Array;
 		
 		/**
@@ -19,12 +21,14 @@ package flare.query
 		
 		/**
 		 * Creates a new CompositeExpression.
-		 * @param items either a single sub-expression or an array of
+		 * @param items either a single sub-expression or an array/Vector.<Object> of
 		 *  sub-expressions
 		 */
 		public function CompositeExpression(items:Object=null) {
 			if (items is Array) {
 				setChildren(items as Array);
+			} else if (items is Vector.<Object>) {
+				setChildren(Vectors.copyToArray(items as Vector.<Object>));
 			} else if (items is Expression) {
 				_children = new Array();
 				addChild(items as Expression);
@@ -32,7 +36,7 @@ package flare.query
 				_children = new Array();
 			} else {
 				throw new ArgumentError(
-					"Input must be an expression or array of expressions");
+					"Input must be an expression or array or vector of expressions");
 			}
 		}
 		
@@ -92,7 +96,7 @@ package flare.query
 		 */
 		public override function getChildAt(idx:int):Expression
 		{
-			return _children[idx];
+			return _children[idx] as Expression;
 		}
 		
 		/**

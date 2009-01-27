@@ -1,5 +1,7 @@
 package flare.util
 {
+	import __AS3__.vec.Vector;
+	
 	import flash.display.DisplayObjectContainer;
 		
 	/**
@@ -43,8 +45,11 @@ package flare.util
 			if (crit is String) {
 				_crit = [crit];
 			} else if (crit is Array) {
-				_crit = Arrays.copy(crit as Array);
-			} else {
+				_crit = crit;
+			} else if (crit is Vector.<Object>) {
+				_crit = Vectors.copyToArray(crit);
+			}
+			else {
 				throw new ArgumentError("Invalid Sort specification type. " +
 					"Input must be either a String or Array");
 			}
@@ -68,7 +73,7 @@ package flare.util
 		 * Sorts the input array according to the sort criteria.
 		 * @param list an array to sort
 		 */
-		public function sort(list:Array):void
+		public function sort(list:Vector.<Object>):void
 		{
 			mergeSort(list, comparator, 0, list.length-1);
 		}
@@ -122,7 +127,7 @@ package flare.util
 			if (a.length == 1) {
 				return sortOn(a[0]);
 			} else {
-				var sorts:Array = [];
+				var sorts:Vector.<Object> = new Vector.<Object>();
 				for each (var field:String in a) {
 					sorts.push(sortOn(field));
 				}
@@ -130,7 +135,7 @@ package flare.util
 			}
 		}
 		
-		private static function multisort(f:Array):Function
+		private static function multisort(f:Vector.<Object>):Function
 		{
 			return function(a:Object, b:Object):int {
 				var c:int;
@@ -158,7 +163,7 @@ package flare.util
 
 		private static const SORT_THRESHOLD:int = 16;
 
-		private static function insertionSort(a:Array, cmp:Function, p:int, r:int):void
+		private static function insertionSort(a:Vector.<Object>, cmp:Function, p:int, r:int):void
 		{
 			var i:int, j:int, key:Object;
 	        for (j = p+1; j<=r; ++j) {
@@ -172,7 +177,7 @@ package flare.util
 	        }
     	}
     	
-    	private static function mergeSort(a:Array, cmp:Function, p:int, r:int):void
+    	private static function mergeSort(a:Vector.<Object>, cmp:Function, p:int, r:int):void
     	{
 	        if (p >= r) {
 	            return;
@@ -187,9 +192,9 @@ package flare.util
 	        }
     	}
 
-	    private static function merge(a:Array, cmp:Function, p:int, q:int, r:int):void
+	    private static function merge(a:Vector.<Object>, cmp:Function, p:int, q:int, r:int):void
 	    {
-	    	var t:Array = new Array(r-p+1);
+	    	var t:Vector.<Object> = new Vector.<Object>(r-p+1);
 	    	var i:int, p1:int = p, p2:int = q+1;
 	    	
 	        for (i=0; p1<=q && p2<=r; ++i)
