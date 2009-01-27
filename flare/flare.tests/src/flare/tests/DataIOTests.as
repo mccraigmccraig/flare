@@ -22,7 +22,7 @@ package flare.tests
 		public function testJSONConverter():void
 		{
 			var jc:JSONConverter = new JSONConverter();
-			var data:Array = jc.parse(JSON, null);
+			var data:Vector.<Object> = jc.parse(JSON, null);
 			
 			assertEquals(DATA.length, data.length);
 			for (var i:int=0; i<DATA.length; ++i) {
