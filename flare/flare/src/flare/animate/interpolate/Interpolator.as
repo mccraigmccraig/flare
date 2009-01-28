@@ -92,7 +92,7 @@ package flare.animate.interpolate
 			lut["int"] = "flare.animate.interpolate::NumberInterpolator";
 			lut["Date"] = "flare.animate.interpolate::DateInterpolator";
 			lut["Array"] = "flare.animate.interpolate::ArrayInterpolator";
-			lut["Vector"] = "flare.animate.interpolate::VectorInterpolator";
+			lut["__AS3__.vec::Vector.<Object>"] = "flare.animate.interpolate::VectorInterpolator";
 			lut["flash.geom::Point"] = "flare.animate.interpolate::PointInterpolator";
 			lut["flash.geom::Rectangle"] = "flare.animate.interpolate::RectangleInterpolator";
 			lut["flash.geom::Matrix"] = "flare.animate.interpolate::MatrixInterpolator";
