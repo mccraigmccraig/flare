@@ -5,7 +5,6 @@ package flare.vis.data
 	import flare.data.DataField;
 	import flare.data.DataSchema;
 	import flare.data.DataSet;
-	import flare.util.Arrays;
 	import flare.util.Property;
 	import flare.util.Sort;
 	import flare.util.Vectors;
@@ -306,31 +305,24 @@ package flare.vis.data
 		{
 			// create vectors and sort criteria
 			var a:Vector.<Object> = Vectors.copy(_nodes.list);
-			var g:Vector.<Object> = new Vector.<Object>();
+			var g:Vector.<Object> = new Vector.<Object>;
 			// Workaround code as a result of initialization bug in the Vector class
-			if(groupBy)
-			{
+			if(groupBy){
 				if(groupBy is Vector.<Object>) g = groupBy as Vector.<Object>;
-				else {
-					g = new Vector.<Object>();
-					g.push(groupBy);	
-				}
+				else if(groupBy is Array)g = Vectors.copyFromArray(groupBy);
+				else g.push(groupBy);	
 			}
 			var len:int = g.length;
-			if (sortBy is Vector.<Object>) {
-				var s:Vector.<Object> = sortBy as Vector.<Object>;
-				for (var i:uint=0; i<s.length; ++i)
-					g.push(s[i]);
-			} else {
-				g.push(sortBy);
-			}
+			if (sortBy is Vector.<Object>) for each(var svi:Object in (sortBy as Vector.<Object>)) g.push(svi);
+			else if(sortBy is Array) for each(var sai:Object in (sortBy as Array)) g.push(sai);
+			else g.push(sortBy);
 			
 			// sort to group by, then ordering
 			a.sort(Sort.$(g));
 			
 			// get property instances for value operations
 			var p:Vector.<Object> = new Vector.<Object>();
-			for (i=0; i<len; ++i) {
+			for (var i:int=0; i<len; ++i) {
 				if (g[i] is String)
 					p.push(Property.$(g[i] as String));
 			}

@@ -182,7 +182,7 @@ package flare.util
 		 * @return the thumbnail image as a BitmapData instance
 		 */
 		public static function thumbnail(src:DisplayObject, width:Number=-1,
-			height:Number=-1, bd:BitmapData=null):BitmapData
+			height:Number=-1, bd:BitmapData=null, clipRect:Rectangle=null):BitmapData
 		{
 			try {
 				// make sure everything is rendered if DirtySprites exist
@@ -210,7 +210,7 @@ package flare.util
 			mat.scale(width/r.width, height/r.height);
 			
 			// draw the thumbnail and return
-			bd.draw(src, mat, src.transform.colorTransform, src.blendMode);
+			bd.draw(src, mat, src.transform.colorTransform, src.blendMode,clipRect);
 			return bd;
 		}
 		

@@ -12,11 +12,11 @@ package flare.vis.operator.layout
 	 */
 	public class IndentedTreeLayout extends Layout
 	{		
-		private var _bspace:Number = 5;  // the spacing between sibling nodes
-    	private var _dspace:Number = 50; // the spacing between depth levels
-    	private var _depths:Vector.<Number> = new Vector.<Number>(20); // TODO make sure vector regrows as needed
-    	private var _maxDepth:int = 0;
-    	private var _ax:Number, _ay:Number; // for holding anchor co-ordinates
+		protected var _bspace:Number = 5;  // the spacing between sibling nodes
+    	protected var _dspace:Number = 50; // the spacing between depth levels
+    	protected var _depths:Vector.<Number> = new Vector.<Number>(20); // TODO make sure vector regrows as needed
+    	protected var _maxDepth:int = 0;
+    	protected var _ax:Number, _ay:Number; // for holding anchor co-ordinates
 		
 		/** The spacing to use between depth levels (the amount of indent). */
 		public function get depthSpacing():Number { return _dspace; }

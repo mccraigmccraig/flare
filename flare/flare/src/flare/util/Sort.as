@@ -1,8 +1,6 @@
 package flare.util
 {
 	import __AS3__.vec.Vector;
-	
-	import flash.display.DisplayObjectContainer;
 		
 	/**
 	 * Utility class for sorting and creating sorting functions. This class
@@ -120,15 +118,20 @@ package flare.util
 		 */
 		public static function $(...a):Function
 		{
-			if (a && a.length > 0 && a[0] is Array) a = a[0];
-			if (a==null || a.length < 1)
+			var names:Vector.<Object>;
+			if (a && a.length > 0){
+				if(a[0] is Array) names = Vectors.copyFromArray(a[0]);
+				else if(a[0] is Vector.<Object>) names = (a[0] as Vector.<Object>);
+				else names = Vectors.copyFromArray(a);
+			}
+			if (names==null || names.length < 1)
 				throw new ArgumentError("Bad input.");
 
-			if (a.length == 1) {
-				return sortOn(a[0]);
+			if (names.length == 1) {
+				return sortOn(names[0] as String);
 			} else {
 				var sorts:Vector.<Object> = new Vector.<Object>();
-				for each (var field:String in a) {
+				for each (var field:String in names) {
 					sorts.push(sortOn(field));
 				}
 				return multisort(sorts);
