@@ -27,7 +27,7 @@ package flare.data.converters
 		{
 			var data:Vector.<Object>;
 			return new DataSet(new DataTable(
-				data = parse(input.readUTFBytes(input.bytesAvailable), schema),
+				data = Vectors.copyFromArray(parse(input.readUTFBytes(input.bytesAvailable), schema)),
 				schema ? schema : DataUtil.inferSchema(data)
 			));
 		}
@@ -37,10 +37,10 @@ package flare.data.converters
 		 * @param input the loaded input data
 		 * @param schema a data schema describing the structure of the data.
 		 *  Schemas are optional in many but not all cases.
-		 * @return an Object vector of converted data objects. If the <code>data</code>
+		 * @return an Array of converted data objects. If the <code>data</code>
 		 *  argument is non-null, it is returned.
 		 */
-		public function parse(text:String, schema:DataSchema):Vector.<Object>
+		public function parse(text:String, schema:DataSchema):Array
 		{
 			var json:Object = JSON.decode(text) as Object;
 			var list:Array = json as Array;
@@ -57,7 +57,7 @@ package flare.data.converters
 					}
 				}
 			}
-			return Vectors.copyFromArray(list);
+			return list;
 		}
 		
 		/**
