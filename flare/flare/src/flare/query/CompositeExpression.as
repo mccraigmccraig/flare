@@ -10,7 +10,7 @@ package flare.query
 	public class CompositeExpression extends Expression
 	{
 		/** Vector of sub-expressions. */
-		protected var _children:Array;
+		protected var _children:Vector.<Object>;
 		
 		/**
 		 * @inheritDoc
@@ -26,14 +26,14 @@ package flare.query
 		 */
 		public function CompositeExpression(items:Object=null) {
 			if (items is Array) {
-				setChildren(items as Array);
+				setChildren(Vectors.copyFromArray(items as Array));
 			} else if (items is Vector.<Object>) {
-				setChildren(Vectors.copyToArray(items as Vector.<Object>));
+				setChildren(items as Vector.<Object>);
 			} else if (items is Expression) {
-				_children = new Array();
+				_children = new Vector.<Object>();
 				addChild(items as Expression);
 			} else if (items == null) {
-				_children = new Array();
+				_children = new Vector.<Object>();
 			} else {
 				throw new ArgumentError(
 					"Input must be an expression or array or vector of expressions");
@@ -57,9 +57,9 @@ package flare.query
 		 * Sets the sub-expressions of this composite
 		 * @param array an array of sub-expressions
 		 */
-		public function setChildren(array:Array):void
+		public function setChildren(array:Vector.<Object>):void
 		{
-			_children = new Array();
+			_children = new Vector.<Object>();
 			for each (var e:* in array) {
 				_children.push(Expression.expr(e));
 			}
