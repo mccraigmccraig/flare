@@ -458,7 +458,7 @@ package flare.vis.axis
 					if (rem[min]) delete rem[min];
 					if (rem[max]) delete rem[max];
 					if (rem[mid]) delete rem[mid];
-					var v:Vector.<Object> = new Vector.<Object>(3);
+					var v:Vector.<Object> = new Vector.<Object>();
 					v.push(min); v.push(mid); v.push(max);
 					labs = v;
 				}
