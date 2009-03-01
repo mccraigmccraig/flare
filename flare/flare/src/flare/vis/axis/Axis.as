@@ -8,11 +8,10 @@ package flare.vis.axis
 	import flare.scale.LinearScale;
 	import flare.scale.Scale;
 	import flare.scale.ScaleType;
-	import flare.util.Arrays;
-	import flare.util.Vectors;
 	import flare.util.Sort;
 	import flare.util.Stats;
 	import flare.util.Strings;
+	import flare.util.Vectors;
 	
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
@@ -44,6 +43,7 @@ package flare.vis.axis
 	public class Axis extends Sprite implements IScaleMap
 	{
 		// children indices
+		protected static const TITLE:uint = 2;
 		protected static const LABELS:uint = 1;
         protected static const GRIDLINES:uint = 0;
 		
@@ -68,6 +68,11 @@ package flare.vis.axis
 		protected var _labelFormat:String = null;
 		protected var _labelTextMode:int = TextSprite.BITMAP;
 		protected var _labelTextFormat:TextFormat = new TextFormat("Arial",12,0);
+		// title settings
+		protected var _axisTitleText:String;
+		protected var _titleTextMode:int = TextSprite.BITMAP;
+		protected var _titleTextFormat:TextFormat = new TextFormat("Arial",14,0);
+		
 		// temporary variables
 		protected var _point:Point = new Point();
 		
@@ -77,6 +82,8 @@ package flare.vis.axis
 		public function get labels():Sprite { return getChildAt(LABELS) as Sprite; }
 		/** Sprite containing the axis grid lines. */
 		public function get gridLines():Sprite { return getChildAt(GRIDLINES) as Sprite; }
+		/** Sprite containing the axis title. */
+		public function get title():TextSprite { return getChildAt(TITLE) as TextSprite; }
 		
 		/** @inheritDoc */
 		public function get x1():Number { return _xa; }
@@ -134,6 +141,16 @@ package flare.vis.axis
 		 *  If positive, the offset is made beneath the data bounds.*/
 		public var labelOffsetY:Number = 0;
 		
+		/** X-dimension offset value for axis title. If negative or zero, this
+		 *  value indicates how much to offset to the left of the label offset.
+		 *  If positive, the offset is made to the right of the label offset. */
+		public var titleOffsetX:Number = 0;
+		
+		/** Y-dimension offset value for axis title. If negative or zero, this
+		 *  value indicates how much to offset above the label offset.
+		 *  If positive, the offset is made beneath the label offset.*/
+		public var titleOffsetY:Number = 0;
+		
 		/** The line color of axis grid lines. */
 		public function get lineColor():uint { return _lineColor; }
 		public function set lineColor(c:uint):void { _lineColor = c; updateGridLines(); }
@@ -186,6 +203,20 @@ package flare.vis.axis
 		}
 		public function set numLabels(n:int):void { _numLabels = n; }
 		
+		/** TextFormat (font, size, style) for axis title text. */
+		public function get axisTitle():String { return _axisTitleText; }
+		public function set axisTitle(t:String):void { _axisTitleText = t; updateLabels(); }
+		
+		/** TextFormat (font, size, style) for axis title text. */
+		public function get titleTextFormat():TextFormat { return _titleTextFormat; }
+		public function set titleTextFormat(f:TextFormat):void { _titleTextFormat = f; updateLabels(); }
+		
+		/** The text rendering mode to use for title TextSprite.
+		 *  @see flare.display.TextSprite. */
+		public function get titleTextMode():int { return _titleTextMode; }
+		public function set titleTextMode(m:int):void { _titleTextMode = m; updateLabels(); }
+		
+		
 		/** The horizontal anchor point for axis labels.
 		 *  @see flare.display.TextSprite. */
 		public function get horizontalAnchor():int { return _anchorH; }
@@ -226,6 +257,7 @@ package flare.vis.axis
         {
             addChild(new Sprite()); // add gridlines
             addChild(new Sprite()); // add labels
+            addChild(new TextSprite()); // add title
         }
 		
 		// -- Updates ---------------------------------------------------------
@@ -250,6 +282,7 @@ package flare.vis.axis
             layout(t);
             updateLabels(); // TODO run through transitioner?
             updateGridLines(); // TODO run through transitioner?
+            updateTitle();
             return trans;
         }
 		
@@ -607,6 +640,22 @@ package flare.vis.axis
 			label.textMode = _labelTextMode;
 			label.text = _labelFormat==null ? axisScale.label(label.value)
 					   : Strings.format(_labelFormat, label.value);
+		}
+		
+		
+		protected function updateTitle() : void
+		{
+			//set and format title
+			var titleSprite:TextSprite = getChildAt(TITLE) as TextSprite;
+			titleSprite.textFormat = _titleTextFormat;
+			titleSprite.horizontalAnchor = TextSprite.CENTER;
+			titleSprite.verticalAnchor = TextSprite.TOP;
+			titleSprite.textMode = _titleTextMode;
+			titleSprite.text = _axisTitleText;
+			//position title 
+			titleSprite.x = (_xb - _xa) / 2 + _xa + _xlo + titleOffsetX; 
+			titleSprite.y = (_yb - _ya) / 2 + _ya + _ylo + titleOffsetY;
+			
 		}
 		
 		/**

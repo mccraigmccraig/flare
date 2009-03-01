@@ -4,6 +4,7 @@ package flare.vis.operator.layout
 	import flare.scale.OrdinalScale;
 	import flare.scale.QuantitativeScale;
 	import flare.scale.Scale;
+	import flare.vis.data.ScaleBinding;
 	import flare.scale.TimeScale;
 	import flare.util.Arrays;
 	import flare.util.Maths;
@@ -50,6 +51,8 @@ package flare.vis.operator.layout
 			_poly = new Vector.<Object>(4*cols.length);
 			_colScale = getScale(_columns);
 		}
+		
+		public function get colScale():Scale{ return _colScale;}
 		
 		/** Flag indicating if the visualization should be normalized. */		
 		public function get normalize():Boolean { return _normalize; }
