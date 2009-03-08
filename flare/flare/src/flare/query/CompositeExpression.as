@@ -69,9 +69,9 @@ package flare.query
 		 * Adds an additional sub-expression to this composite.
 		 * @param expr the sub-expression to add.
 		 */
-		public function addChild(expr:Expression):void
+		public function addChild(expr:*):void
 		{
-			_children.push(expr);
+			_children.push(Expression.expr(expr));
 		}
 		
 		/**
